@@ -1,0 +1,317 @@
+[
+  {
+    "name": "Raleigh",
+    "state": "NC",
+    "slug": "raleigh-nc",
+    "lat": 35.7796,
+    "lng": -78.6382,
+    "medianIncome": 72000,
+    "monthlyCost": 2150,
+    "avgRent": 1280,
+    "commuteTime": 26,
+    "crimeRate": 320,
+    "amenitiesScore": 78,
+    "scores": {
+      "affordability": 82,
+      "jobs": 74,
+      "commute": 68,
+      "safety": 71,
+      "lifestyle": 80,
+      "overall": 79
+    }
+  },
+  {
+    "name": "Austin",
+    "state": "TX",
+    "slug": "austin-tx",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "medianIncome": 75000,
+    "monthlyCost": 2450,
+    "avgRent": 1520,
+    "commuteTime": 28,
+    "crimeRate": 380,
+    "amenitiesScore": 85,
+    "scores": {
+      "affordability": 75,
+      "jobs": 82,
+      "commute": 65,
+      "safety": 68,
+      "lifestyle": 88,
+      "overall": 76
+    }
+  },
+  {
+    "name": "Denver",
+    "state": "CO",
+    "slug": "denver-co",
+    "lat": 39.7392,
+    "lng": -104.9903,
+    "medianIncome": 78000,
+    "monthlyCost": 2650,
+    "avgRent": 1650,
+    "commuteTime": 27,
+    "crimeRate": 420,
+    "amenitiesScore": 82,
+    "scores": {
+      "affordability": 72,
+      "jobs": 76,
+      "commute": 67,
+      "safety": 65,
+      "lifestyle": 85,
+      "overall": 73
+    }
+  },
+  {
+    "name": "Nashville",
+    "state": "TN",
+    "slug": "nashville-tn",
+    "lat": 36.1627,
+    "lng": -86.7816,
+    "medianIncome": 68000,
+    "monthlyCost": 2100,
+    "avgRent": 1350,
+    "commuteTime": 29,
+    "crimeRate": 450,
+    "amenitiesScore": 76,
+    "scores": {
+      "affordability": 79,
+      "jobs": 70,
+      "commute": 64,
+      "safety": 62,
+      "lifestyle": 79,
+      "overall": 71
+    }
+  },
+  {
+    "name": "Boise",
+    "state": "ID",
+    "slug": "boise-id",
+    "lat": 43.615,
+    "lng": -116.2023,
+    "medianIncome": 65000,
+    "monthlyCost": 1850,
+    "avgRent": 1150,
+    "commuteTime": 22,
+    "crimeRate": 280,
+    "amenitiesScore": 72,
+    "scores": {
+      "affordability": 86,
+      "jobs": 68,
+      "commute": 73,
+      "safety": 76,
+      "lifestyle": 75,
+      "overall": 82
+    }
+  },
+  {
+    "name": "Phoenix",
+    "state": "AZ",
+    "slug": "phoenix-az",
+    "lat": 33.4484,
+    "lng": -112.074,
+    "medianIncome": 70000,
+    "monthlyCost": 2000,
+    "avgRent": 1250,
+    "commuteTime": 30,
+    "crimeRate": 410,
+    "amenitiesScore": 74,
+    "scores": {
+      "affordability": 85,
+      "jobs": 72,
+      "commute": 62,
+      "safety": 66,
+      "lifestyle": 77,
+      "overall": 76
+    }
+  },
+  {
+    "name": "Portland",
+    "state": "OR",
+    "slug": "portland-or",
+    "lat": 45.5152,
+    "lng": -122.6784,
+    "medianIncome": 76000,
+    "monthlyCost": 2550,
+    "avgRent": 1580,
+    "commuteTime": 31,
+    "crimeRate": 480,
+    "amenitiesScore": 80,
+    "scores": {
+      "affordability": 73,
+      "jobs": 74,
+      "commute": 61,
+      "safety": 60,
+      "lifestyle": 83,
+      "overall": 70
+    }
+  },
+  {
+    "name": "Charlotte",
+    "state": "NC",
+    "slug": "charlotte-nc",
+    "lat": 35.2271,
+    "lng": -80.8431,
+    "medianIncome": 71000,
+    "monthlyCost": 2050,
+    "avgRent": 1280,
+    "commuteTime": 28,
+    "crimeRate": 390,
+    "amenitiesScore": 75,
+    "scores": {
+      "affordability": 84,
+      "jobs": 73,
+      "commute": 65,
+      "safety": 68,
+      "lifestyle": 78,
+      "overall": 78
+    }
+  },
+  {
+    "name": "Columbus",
+    "state": "OH",
+    "slug": "columbus-oh",
+    "lat": 39.9612,
+    "lng": -82.9988,
+    "medianIncome": 66000,
+    "monthlyCost": 1800,
+    "avgRent": 1100,
+    "commuteTime": 25,
+    "crimeRate": 350,
+    "amenitiesScore": 73,
+    "scores": {
+      "affordability": 89,
+      "jobs": 69,
+      "commute": 69,
+      "safety": 70,
+      "lifestyle": 76,
+      "overall": 81
+    }
+  },
+  {
+    "name": "San Antonio",
+    "state": "TX",
+    "slug": "san-antonio-tx",
+    "lat": 29.4241,
+    "lng": -98.4936,
+    "medianIncome": 63000,
+    "monthlyCost": 1750,
+    "avgRent": 1050,
+    "commuteTime": 27,
+    "crimeRate": 430,
+    "amenitiesScore": 71,
+    "scores": {
+      "affordability": 88,
+      "jobs": 66,
+      "commute": 67,
+      "safety": 64,
+      "lifestyle": 74,
+      "overall": 77
+    }
+  },
+  {
+    "name": "Minneapolis",
+    "state": "MN",
+    "slug": "minneapolis-mn",
+    "lat": 44.9778,
+    "lng": -93.265,
+    "medianIncome": 74000,
+    "monthlyCost": 2250,
+    "avgRent": 1400,
+    "commuteTime": 26,
+    "crimeRate": 440,
+    "amenitiesScore": 79,
+    "scores": {
+      "affordability": 80,
+      "jobs": 75,
+      "commute": 68,
+      "safety": 63,
+      "lifestyle": 82,
+      "overall": 74
+    }
+  },
+  {
+    "name": "Tampa",
+    "state": "FL",
+    "slug": "tampa-fl",
+    "lat": 27.9506,
+    "lng": -82.4572,
+    "medianIncome": 67000,
+    "monthlyCost": 1950,
+    "avgRent": 1220,
+    "commuteTime": 29,
+    "crimeRate": 400,
+    "amenitiesScore": 77,
+    "scores": {
+      "affordability": 83,
+      "jobs": 70,
+      "commute": 64,
+      "safety": 67,
+      "lifestyle": 80,
+      "overall": 77
+    }
+  },
+  {
+    "name": "Salt Lake City",
+    "state": "UT",
+    "slug": "salt-lake-city-ut",
+    "lat": 40.7608,
+    "lng": -111.891,
+    "medianIncome": 69000,
+    "monthlyCost": 2000,
+    "avgRent": 1250,
+    "commuteTime": 24,
+    "crimeRate": 360,
+    "amenitiesScore": 76,
+    "scores": {
+      "affordability": 84,
+      "jobs": 72,
+      "commute": 71,
+      "safety": 69,
+      "lifestyle": 79,
+      "overall": 80
+    }
+  },
+  {
+    "name": "Indianapolis",
+    "state": "IN",
+    "slug": "indianapolis-in",
+    "lat": 39.7684,
+    "lng": -86.1581,
+    "medianIncome": 64000,
+    "monthlyCost": 1700,
+    "avgRent": 1000,
+    "commuteTime": 26,
+    "crimeRate": 460,
+    "amenitiesScore": 70,
+    "scores": {
+      "affordability": 91,
+      "jobs": 67,
+      "commute": 68,
+      "safety": 59,
+      "lifestyle": 73,
+      "overall": 78
+    }
+  },
+  {
+    "name": "Kansas City",
+    "state": "MO",
+    "slug": "kansas-city-mo",
+    "lat": 39.0997,
+    "lng": -94.5786,
+    "medianIncome": 65000,
+    "monthlyCost": 1750,
+    "avgRent": 1050,
+    "commuteTime": 25,
+    "crimeRate": 470,
+    "amenitiesScore": 72,
+    "scores": {
+      "affordability": 90,
+      "jobs": 68,
+      "commute": 69,
+      "safety": 58,
+      "lifestyle": 75,
+      "overall": 79
+    }
+  }
+]
