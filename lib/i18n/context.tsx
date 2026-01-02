@@ -93,6 +93,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const dir = RTL_LANGUAGES.includes(language) ? 'rtl' : 'ltr';
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <I18nContext.Provider value={{ language, setLanguage, t, dir, unitSystem, setUnitSystem }}>
       {children}
