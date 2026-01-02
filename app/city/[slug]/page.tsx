@@ -1,12 +1,26 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, DollarSign, Home, Car, Utensils, Zap } from 'lucide-react';
 import ScoreBar from '@/components/ScoreBar';
+import WeatherCard from '@/components/WeatherCard';
 import { getCityBySlug } from '@/lib/cities';
+import { getWeatherByCitySlug, type WeatherData } from '@/lib/weather';
 
 export default function CityDetail({ params }: { params: { slug: string } }) {
   const city = getCityBySlug(params.slug);
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+
+  useEffect(() => {
+    async function fetchWeather() {
+      if (city) {
+        const weatherData = await getWeatherByCitySlug(city.slug);
+        setWeather(weatherData);
+      }
+    }
+    fetchWeather();
+  }, [city]);
 
   if (!city) {
     return (
@@ -115,7 +129,7 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Monthly Cost Breakdown</h2>
             <div className="space-y-4">
@@ -179,6 +193,8 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
               </div>
             </div>
           </div>
+
+          {weather && <WeatherCard weather={weather} />}
         </div>
 
         <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl shadow-lg p-8 mb-8 border-l-4 border-blue-600">
