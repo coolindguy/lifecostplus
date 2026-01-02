@@ -8,6 +8,7 @@ import ScoreBar from '@/components/ScoreBar';
 import { getCityBySlug } from '@/lib/cities';
 import { getCityBySlug as getCityById } from '@/lib/locations';
 import { getWeatherByCitySlug, type WeatherData } from '@/lib/weather';
+import { isFeatureEnabled } from '@/lib/feature-flags';
 
 const WeatherCard = dynamic(() => import('@/components/WeatherCard'), {
   loading: () => <div className="bg-gray-100 rounded-2xl h-64 animate-pulse" />,
@@ -36,8 +37,10 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
   useEffect(() => {
     async function fetchData() {
       if (city) {
-        const weatherData = await getWeatherByCitySlug(city.slug);
-        setWeather(weatherData);
+        if (isFeatureEnabled('weather')) {
+          const weatherData = await getWeatherByCitySlug(city.slug);
+          setWeather(weatherData);
+        }
 
         const cityData = await getCityById(city.slug);
         if (cityData) {
@@ -108,9 +111,11 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
               <Link href="/map" className="text-gray-700 hover:text-blue-600 font-medium">
                 Map View
               </Link>
-              <Link href="/compare" className="text-gray-700 hover:text-blue-600 font-medium">
-                Compare
-              </Link>
+              {isFeatureEnabled('compare') && (
+                <Link href="/compare" className="text-gray-700 hover:text-blue-600 font-medium">
+                  Compare
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -220,7 +225,7 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
             </div>
           </div>
 
-          {weather && <WeatherCard weather={weather} />}
+          {isFeatureEnabled('weather') && weather && <WeatherCard weather={weather} />}
         </div>
 
         <div className="bg-white border-b border-gray-200 rounded-t-2xl mb-8">
@@ -236,28 +241,32 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
               <Info className="w-4 h-4" />
               Overview
             </button>
-            <button
-              onClick={() => setActiveTab('education')}
-              className={`flex items-center gap-2 px-6 py-3 font-medium rounded-t-lg transition-colors ${
-                activeTab === 'education'
-                  ? 'bg-white text-blue-600 border-t-2 border-x-2 border-blue-600 border-b-0'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              <GraduationCap className="w-4 h-4" />
-              Education
-            </button>
-            <button
-              onClick={() => setActiveTab('forums')}
-              className={`flex items-center gap-2 px-6 py-3 font-medium rounded-t-lg transition-colors ${
-                activeTab === 'forums'
-                  ? 'bg-white text-blue-600 border-t-2 border-x-2 border-blue-600 border-b-0'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              <MessageSquare className="w-4 h-4" />
-              Forums
-            </button>
+            {isFeatureEnabled('education') && (
+              <button
+                onClick={() => setActiveTab('education')}
+                className={`flex items-center gap-2 px-6 py-3 font-medium rounded-t-lg transition-colors ${
+                  activeTab === 'education'
+                    ? 'bg-white text-blue-600 border-t-2 border-x-2 border-blue-600 border-b-0'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <GraduationCap className="w-4 h-4" />
+                Education
+              </button>
+            )}
+            {isFeatureEnabled('forums') && (
+              <button
+                onClick={() => setActiveTab('forums')}
+                className={`flex items-center gap-2 px-6 py-3 font-medium rounded-t-lg transition-colors ${
+                  activeTab === 'forums'
+                    ? 'bg-white text-blue-600 border-t-2 border-x-2 border-blue-600 border-b-0'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+                Forums
+              </button>
+            )}
           </div>
         </div>
 
@@ -268,23 +277,25 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
               <p className="text-lg text-gray-700 leading-relaxed">{insight}</p>
             </div>
 
-            {cityId && (
+            {isFeatureEnabled('news') && cityId && (
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest News & Updates</h2>
                 <NewsList locationType="city" locationId={cityId} />
               </div>
             )}
 
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in a Comparison?</h2>
-              <p className="text-gray-600 mb-6">Compare this city with another to see detailed differences.</p>
-              <Link
-                href={`/compare?city1=${city.slug}`}
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-              >
-                Compare With Another City
-              </Link>
-            </div>
+            {isFeatureEnabled('compare') && (
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in a Comparison?</h2>
+                <p className="text-gray-600 mb-6">Compare this city with another to see detailed differences.</p>
+                <Link
+                  href={`/compare?city1=${city.slug}`}
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+                >
+                  Compare With Another City
+                </Link>
+              </div>
+            )}
           </>
         )}
 

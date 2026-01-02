@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronDown, Home, Map, GitCompare, BookOpen, ChevronRight, MapPin, Radar } from 'lucide-react';
 import { getCountries, getStatesByCountry, getDistrictsByState, getCitiesByDistrict, type Country, type State, type District, type City } from '@/lib/locations';
 import { useI18n } from '@/lib/i18n/context';
+import { isFeatureEnabled } from '@/lib/feature-flags';
 
 interface SidebarItem {
   label: string;
@@ -123,6 +124,34 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     };
   };
 
+  const buildToolsSection = (): SidebarItem | null => {
+    const toolsChildren: SidebarItem[] = [];
+
+    if (isFeatureEnabled('compare')) {
+      toolsChildren.push({
+        label: t('common.compare'),
+        href: '/compare',
+        icon: <GitCompare className="w-4 h-4" />,
+      });
+    }
+
+    if (isFeatureEnabled('methodology')) {
+      toolsChildren.push({
+        label: t('common.methodology'),
+        href: '/methodology',
+        icon: <BookOpen className="w-4 h-4" />,
+      });
+    }
+
+    if (toolsChildren.length === 0) return null;
+
+    return {
+      label: t('common.tools'),
+      icon: <ChevronRight className="w-5 h-5" />,
+      children: toolsChildren,
+    };
+  };
+
   const navigationItems: SidebarItem[] = [
     {
       label: t('common.home'),
@@ -135,23 +164,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       href: '/map',
       icon: <Map className="w-5 h-5" />,
     },
-    {
-      label: t('common.tools'),
-      icon: <ChevronRight className="w-5 h-5" />,
-      children: [
-        {
-          label: t('common.compare'),
-          href: '/compare',
-          icon: <GitCompare className="w-4 h-4" />,
-        },
-        {
-          label: t('common.methodology'),
-          href: '/methodology',
-          icon: <BookOpen className="w-4 h-4" />,
-        },
-      ],
-    },
-  ];
+    buildToolsSection(),
+  ].filter((item): item is SidebarItem => item !== null);
 
   const renderItem = (item: SidebarItem, level = 0) => {
     const isExpanded = expandedSections.includes(item.label);
@@ -213,6 +227,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
 
   const renderNearbyCitiesControl = () => {
+    if (!isFeatureEnabled('proximity')) return null;
+
     const isLocationsExpanded = expandedSections.includes(t('common.locations'));
 
     if (!isLocationsExpanded) return null;

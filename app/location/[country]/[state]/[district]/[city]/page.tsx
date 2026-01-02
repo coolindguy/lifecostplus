@@ -9,6 +9,7 @@ import ScoreBar from '@/components/ScoreBar';
 import CityCard from '@/components/CityCard';
 import { getCountryBySlug, getStateBySlug, getDistrictBySlug, getCityBySlug as getDbCityBySlug, getNearbyCities, type NearbyCity } from '@/lib/locations';
 import { getCityBySlug } from '@/lib/cities';
+import { isFeatureEnabled } from '@/lib/feature-flags';
 
 export default function CityPage({
   params,
@@ -49,7 +50,7 @@ export default function CityPage({
 
   useEffect(() => {
     async function loadNearbyCities() {
-      if (!params.city) return;
+      if (!params.city || !isFeatureEnabled('proximity')) return;
 
       setLoadingNearby(true);
       try {
@@ -253,7 +254,7 @@ export default function CityPage({
           <p className="text-lg text-gray-700 leading-relaxed">{insight}</p>
         </div>
 
-        {nearbyCities.length > 0 && (
+        {isFeatureEnabled('proximity') && nearbyCities.length > 0 && (
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
             <div className="flex items-center gap-2 mb-6">
               <MapPin className="w-6 h-6 text-blue-600" />
@@ -279,16 +280,18 @@ export default function CityPage({
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in a Comparison?</h2>
-          <p className="text-gray-600 mb-6">Compare this city with another to see detailed differences.</p>
-          <Link
-            href={`/compare?city1=${city.slug}`}
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
-            Compare With Another City
-          </Link>
-        </div>
+        {isFeatureEnabled('compare') && (
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in a Comparison?</h2>
+            <p className="text-gray-600 mb-6">Compare this city with another to see detailed differences.</p>
+            <Link
+              href={`/compare?city1=${city.slug}`}
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
+              Compare With Another City
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
