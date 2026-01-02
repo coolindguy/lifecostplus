@@ -5,21 +5,29 @@ import Link from 'next/link';
 import { ArrowLeft, DollarSign, Home, Car, Utensils, Zap } from 'lucide-react';
 import ScoreBar from '@/components/ScoreBar';
 import WeatherCard from '@/components/WeatherCard';
+import NewsList from '@/components/NewsList';
 import { getCityBySlug } from '@/lib/cities';
+import { getCityBySlug as getCityById } from '@/lib/locations';
 import { getWeatherByCitySlug, type WeatherData } from '@/lib/weather';
 
 export default function CityDetail({ params }: { params: { slug: string } }) {
   const city = getCityBySlug(params.slug);
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [cityId, setCityId] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchWeather() {
+    async function fetchData() {
       if (city) {
         const weatherData = await getWeatherByCitySlug(city.slug);
         setWeather(weatherData);
+
+        const cityData = await getCityById(city.slug);
+        if (cityData) {
+          setCityId(cityData.id);
+        }
       }
     }
-    fetchWeather();
+    fetchData();
   }, [city]);
 
   if (!city) {
@@ -201,6 +209,13 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Why This City Works</h2>
           <p className="text-lg text-gray-700 leading-relaxed">{insight}</p>
         </div>
+
+        {cityId && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest News & Updates</h2>
+            <NewsList locationType="city" locationId={cityId} />
+          </div>
+        )}
 
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in a Comparison?</h2>

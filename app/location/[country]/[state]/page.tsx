@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MapPin, Building2 } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumb';
 import CityCard from '@/components/CityCard';
+import NewsList from '@/components/NewsList';
 import { getCountryBySlug, getStateBySlug, getDistrictsByState, getCitiesByState, buildBreadcrumbs, type District, type City } from '@/lib/locations';
 import { getCityBySlug } from '@/lib/cities';
 
@@ -14,6 +15,7 @@ export default function StatePage({ params }: { params: { country: string; state
   const [loading, setLoading] = useState(true);
   const [countryName, setCountryName] = useState('');
   const [stateName, setStateName] = useState('');
+  const [stateId, setStateId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -25,6 +27,7 @@ export default function StatePage({ params }: { params: { country: string; state
       if (country && state) {
         setCountryName(country.name);
         setStateName(state.name);
+        setStateId(state.id);
 
         const [districtsData, citiesData] = await Promise.all([
           getDistrictsByState(params.state),
@@ -83,6 +86,13 @@ export default function StatePage({ params }: { params: { country: string; state
         <h1 className="text-4xl font-bold text-gray-900 mb-2">{stateName}</h1>
         <p className="text-gray-600">{countryName}</p>
       </div>
+
+      {stateId && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest News & Updates</h2>
+          <NewsList locationType="state" locationId={stateId} />
+        </div>
+      )}
 
       {districts.length > 0 && (
         <div className="mt-8">
