@@ -261,9 +261,6 @@ export default function CityPage({
                 Nearby Cities ({nearbyCities.length})
               </h2>
             </div>
-            <p className="text-gray-600 mb-6">
-              Within {radius} {unit} of {city.name}
-            </p>
             {loadingNearby ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3].map((i) => (
@@ -275,9 +272,6 @@ export default function CityPage({
                 {nearbyCities.map((nearbyCity) => (
                   <div key={nearbyCity.id}>
                     <CityCard city={nearbyCity as any} />
-                    <p className="text-sm text-gray-600 mt-2 text-center">
-                      {nearbyCity.distance_miles?.toFixed(1)} mi / {nearbyCity.distance_km?.toFixed(1)} km
-                    </p>
                   </div>
                 ))}
               </div>
