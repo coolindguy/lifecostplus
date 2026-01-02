@@ -6,6 +6,7 @@ import { ArrowLeft, DollarSign, Home, Car, Utensils, Zap } from 'lucide-react';
 import ScoreBar from '@/components/ScoreBar';
 import WeatherCard from '@/components/WeatherCard';
 import NewsList from '@/components/NewsList';
+import EducationList from '@/components/EducationList';
 import { getCityBySlug } from '@/lib/cities';
 import { getCityBySlug as getCityById } from '@/lib/locations';
 import { getWeatherByCitySlug, type WeatherData } from '@/lib/weather';
@@ -214,6 +215,13 @@ export default function CityDetail({ params }: { params: { slug: string } }) {
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest News & Updates</h2>
             <NewsList locationType="city" locationId={cityId} />
+          </div>
+        )}
+
+        {cityId && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Schools & Education</h2>
+            <EducationList cityId={cityId} />
           </div>
         )}
 

@@ -73,6 +73,10 @@ export function sortCitiesByPriority(
           scoreA += a.scores.lifestyle;
           scoreB += b.scores.lifestyle;
           break;
+        case 'education':
+          scoreA += (a.scores.lifestyle + a.scores.safety) / 2;
+          scoreB += (b.scores.lifestyle + b.scores.safety) / 2;
+          break;
       }
     });
 

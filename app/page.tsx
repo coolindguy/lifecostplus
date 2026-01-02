@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Search, MapPin, DollarSign, TrendingUp, Shield } from 'lucide-react';
+import { Search, MapPin, DollarSign, TrendingUp, Shield, GraduationCap } from 'lucide-react';
 import CityCard from '@/components/CityCard';
 import { getCities, filterCities, sortCitiesByPriority } from '@/lib/cities';
 
@@ -108,12 +108,13 @@ export default function Home() {
             <label className="block text-sm font-semibold text-gray-700 mb-3">
               Priority Factors
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {[
                 { id: 'affordability', label: 'Affordability', icon: DollarSign },
                 { id: 'commute', label: 'Commute', icon: MapPin },
                 { id: 'safety', label: 'Safety', icon: Shield },
                 { id: 'lifestyle', label: 'Lifestyle', icon: TrendingUp },
+                { id: 'education', label: 'Education', icon: GraduationCap },
               ].map((priority) => {
                 const Icon = priority.icon;
                 return (
