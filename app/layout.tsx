@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import GlobalLayout from '@/components/GlobalLayout';
+import { I18nProvider } from '@/lib/i18n/context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,9 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body className={inter.className}>
-        <GlobalLayout>{children}</GlobalLayout>
+        <I18nProvider>
+          <GlobalLayout>{children}</GlobalLayout>
+        </I18nProvider>
       </body>
     </html>
   );

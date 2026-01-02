@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronDown, Home, Map, GitCompare, BookOpen, ChevronRight, MapPin, Radius } from 'lucide-react';
 import { getCountries, getStatesByCountry, getDistrictsByState, getCitiesByDistrict, type Country, type State, type District, type City } from '@/lib/locations';
+import { useI18n } from '@/lib/i18n/context';
 
 interface SidebarItem {
   label: string;
@@ -24,6 +25,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useI18n();
   const [expandedSections, setExpandedSections] = useState<string[]>(['Tools']);
   const [dynamicChildren, setDynamicChildren] = useState<Record<string, SidebarItem[]>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
@@ -79,7 +81,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const createLocationItems = (): SidebarItem => {
     return {
-      label: 'Locations',
+      label: t('common.locations'),
       icon: <MapPin className="w-5 h-5" />,
       isDynamic: true,
       loadChildren: async () => {
@@ -122,27 +124,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const navigationItems: SidebarItem[] = [
     {
-      label: 'Home',
+      label: t('common.home'),
       href: '/',
       icon: <Home className="w-5 h-5" />,
     },
     createLocationItems(),
     {
-      label: 'Map View',
+      label: t('common.mapView'),
       href: '/map',
       icon: <Map className="w-5 h-5" />,
     },
     {
-      label: 'Tools',
+      label: t('common.tools'),
       icon: <ChevronRight className="w-5 h-5" />,
       children: [
         {
-          label: 'Compare Cities',
+          label: t('common.compare'),
           href: '/compare',
           icon: <GitCompare className="w-4 h-4" />,
         },
         {
-          label: 'Methodology',
+          label: t('common.methodology'),
           href: '/methodology',
           icon: <BookOpen className="w-4 h-4" />,
         },
@@ -226,13 +228,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="p-4 border-b border-gray-200 bg-gradient-to-b from-blue-50 to-white">
           <div className="flex items-center gap-2 mb-3">
             <Radius className="w-5 h-5 text-blue-600" />
-            <h3 className="font-semibold text-gray-900">Proximity</h3>
+            <h3 className="font-semibold text-gray-900">{t('common.proximity')}</h3>
           </div>
 
           <div className="space-y-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-2">
-                Radius
+                {t('common.radius')}
               </label>
               <div className="flex gap-2">
                 {[10, 25, 50].map((r) => (
@@ -253,7 +255,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-2">
-                Units
+                {t('common.units')}
               </label>
               <div className="flex gap-2">
                 <button
@@ -264,7 +266,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Miles
+                  {t('common.miles')}
                 </button>
                 <button
                   onClick={() => handleUnitChange('kilometers')}
@@ -274,7 +276,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Km
+                  {t('common.kilometers')}
                 </button>
               </div>
             </div>
