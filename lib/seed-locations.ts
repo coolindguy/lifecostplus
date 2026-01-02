@@ -150,6 +150,8 @@ export async function seedLocations() {
         score_commute: city.scores.commute,
         score_safety: city.scores.safety,
         score_lifestyle: city.scores.lifestyle,
+        latitude: city.lat,
+        longitude: city.lng,
       }, { onConflict: 'slug' });
 
     if (cityError) {

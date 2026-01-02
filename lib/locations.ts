@@ -45,6 +45,8 @@ export interface City {
   score_commute: number;
   score_safety: number;
   score_lifestyle: number;
+  latitude?: number;
+  longitude?: number;
   created_at: string;
 }
 
@@ -276,4 +278,54 @@ export async function getAllCities(): Promise<City[]> {
   }
 
   return data || [];
+}
+
+export interface NearbyCity extends City {
+  distance_miles?: number;
+  distance_km?: number;
+}
+
+export async function getNearbyCities(
+  citySlug: string,
+  radiusMiles: number = 25
+): Promise<NearbyCity[]> {
+  const { data, error } = await supabase.rpc('get_nearby_cities_by_slug', {
+    city_slug: citySlug,
+    radius_miles: radiusMiles,
+  });
+
+  if (error) {
+    console.error('Error fetching nearby cities:', error);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  const slugs = data.map((city: any) => city.slug);
+  const { data: citiesData, error: citiesError } = await supabase
+    .from('cities')
+    .select('*')
+    .in('slug', slugs);
+
+  if (citiesError) {
+    console.error('Error fetching city details:', citiesError);
+    return [];
+  }
+
+  const detailsMap = new Map(
+    (citiesData || []).map((city) => [city.slug, city])
+  );
+
+  return data.map((nearbyCity: any) => {
+    const details = detailsMap.get(nearbyCity.slug);
+    return {
+      ...details,
+      latitude: nearbyCity.latitude,
+      longitude: nearbyCity.longitude,
+      distance_miles: nearbyCity.distance_miles,
+      distance_km: nearbyCity.distance_miles * 1.60934,
+    } as NearbyCity;
+  });
 }
