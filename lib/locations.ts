@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { cache } from './cache';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -78,6 +79,13 @@ export async function getCountries(): Promise<Country[]> {
 }
 
 export async function getCountryBySlug(slug: string): Promise<Country | null> {
+  const cacheKey = `country:${slug}`;
+  const cached = cache.get<Country>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
   const { data, error } = await supabase
     .from('countries')
     .select('*')
@@ -87,6 +95,10 @@ export async function getCountryBySlug(slug: string): Promise<Country | null> {
   if (error) {
     console.error('Error fetching country:', error);
     return null;
+  }
+
+  if (data) {
+    cache.set(cacheKey, data, 600000);
   }
 
   return data;
@@ -108,6 +120,13 @@ export async function getStatesByCountry(countrySlug: string): Promise<State[]> 
 }
 
 export async function getStateBySlug(slug: string): Promise<State | null> {
+  const cacheKey = `state:${slug}`;
+  const cached = cache.get<State>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
   const { data, error } = await supabase
     .from('states')
     .select('*')
@@ -117,6 +136,10 @@ export async function getStateBySlug(slug: string): Promise<State | null> {
   if (error) {
     console.error('Error fetching state:', error);
     return null;
+  }
+
+  if (data) {
+    cache.set(cacheKey, data, 600000);
   }
 
   return data;
@@ -183,6 +206,13 @@ export async function getCitiesByState(stateSlug: string): Promise<City[]> {
 }
 
 export async function getCityBySlug(slug: string): Promise<City | null> {
+  const cacheKey = `city:${slug}`;
+  const cached = cache.get<City>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
   const { data, error } = await supabase
     .from('cities')
     .select('*')
@@ -192,6 +222,10 @@ export async function getCityBySlug(slug: string): Promise<City | null> {
   if (error) {
     console.error('Error fetching city:', error);
     return null;
+  }
+
+  if (data) {
+    cache.set(cacheKey, data, 300000);
   }
 
   return data;
@@ -289,6 +323,13 @@ export async function getNearbyCities(
   citySlug: string,
   radiusMiles: number = 25
 ): Promise<NearbyCity[]> {
+  const cacheKey = `nearby:${citySlug}:${radiusMiles}`;
+  const cached = cache.get<NearbyCity[]>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
   const { data, error } = await supabase.rpc('get_nearby_cities_by_slug', {
     city_slug: citySlug,
     radius_miles: radiusMiles,
@@ -324,7 +365,7 @@ export async function getNearbyCities(
     (citiesData || []).map((city: any) => [city.slug, city])
   );
 
-  return data.map((nearbyCity: any) => {
+  const result = data.map((nearbyCity: any) => {
     const details: any = detailsMap.get(nearbyCity.slug);
     return {
       id: details?.id,
@@ -360,4 +401,8 @@ export async function getNearbyCities(
       created_at: details?.created_at,
     } as NearbyCity;
   });
+
+  cache.set(cacheKey, result, 600000);
+
+  return result;
 }

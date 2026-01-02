@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { MessageSquare, Eye, User, Clock, Pin } from 'lucide-react';
 import { ForumThread } from '@/lib/forums';
 import { formatDistanceToNow } from 'date-fns';
@@ -9,7 +10,7 @@ interface ForumThreadCardProps {
   onClick: () => void;
 }
 
-export default function ForumThreadCard({ thread, onClick }: ForumThreadCardProps) {
+function ForumThreadCard({ thread, onClick }: ForumThreadCardProps) {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'housing':
@@ -86,3 +87,5 @@ export default function ForumThreadCard({ thread, onClick }: ForumThreadCardProp
     </div>
   );
 }
+
+export default memo(ForumThreadCard);

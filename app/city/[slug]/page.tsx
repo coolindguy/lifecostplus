@@ -1,16 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowLeft, DollarSign, Home, Car, Utensils, Zap, Info, GraduationCap, MessageSquare } from 'lucide-react';
 import ScoreBar from '@/components/ScoreBar';
-import WeatherCard from '@/components/WeatherCard';
-import NewsList from '@/components/NewsList';
-import EducationList from '@/components/EducationList';
-import ForumList from '@/components/ForumList';
 import { getCityBySlug } from '@/lib/cities';
 import { getCityBySlug as getCityById } from '@/lib/locations';
 import { getWeatherByCitySlug, type WeatherData } from '@/lib/weather';
+
+const WeatherCard = dynamic(() => import('@/components/WeatherCard'), {
+  loading: () => <div className="bg-gray-100 rounded-2xl h-64 animate-pulse" />,
+});
+
+const NewsList = dynamic(() => import('@/components/NewsList'), {
+  loading: () => <div className="space-y-4">{[...Array(3)].map((_, i) => <div key={i} className="bg-gray-100 rounded-lg h-32 animate-pulse" />)}</div>,
+});
+
+const EducationList = dynamic(() => import('@/components/EducationList'), {
+  loading: () => <div className="space-y-4">{[...Array(3)].map((_, i) => <div key={i} className="bg-gray-100 rounded-lg h-32 animate-pulse" />)}</div>,
+});
+
+const ForumList = dynamic(() => import('@/components/ForumList'), {
+  loading: () => <div className="space-y-4">{[...Array(5)].map((_, i) => <div key={i} className="bg-gray-100 rounded-lg h-32 animate-pulse" />)}</div>,
+});
 
 type TabType = 'overview' | 'education' | 'forums';
 

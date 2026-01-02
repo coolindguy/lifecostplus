@@ -1,4 +1,5 @@
 import { supabase } from './locations';
+import { cache } from './cache';
 import type { City } from './locations';
 
 export type DistanceUnit = 'miles' | 'kilometers';
@@ -70,6 +71,13 @@ export async function getNearbyCitiesBySlug(
   const { radius = DEFAULT_RADIUS_MILES, unit = 'miles' } = config;
   const radiusMiles = unit === 'kilometers' ? radius * KM_TO_MILES : radius;
 
+  const cacheKey = `proximity:slug:${citySlug}:${radiusMiles}`;
+  const cached = cache.get<NearbyCity[]>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
   const { data, error } = await supabase.rpc('get_nearby_cities_by_slug', {
     city_slug: citySlug,
     radius_miles: radiusMiles,
@@ -80,7 +88,7 @@ export async function getNearbyCitiesBySlug(
     return [];
   }
 
-  return (data || []).map((city: any) => ({
+  const result = (data || []).map((city: any) => ({
     id: city.id,
     name: city.name,
     slug: city.slug,
@@ -102,6 +110,10 @@ export async function getNearbyCitiesBySlug(
     score_lifestyle: 0,
     created_at: '',
   }));
+
+  cache.set(cacheKey, result, 600000);
+
+  return result;
 }
 
 export async function getNearbyCitiesById(
@@ -110,6 +122,13 @@ export async function getNearbyCitiesById(
 ): Promise<NearbyCity[]> {
   const { radius = DEFAULT_RADIUS_MILES, unit = 'miles' } = config;
   const radiusMiles = unit === 'kilometers' ? radius * KM_TO_MILES : radius;
+
+  const cacheKey = `proximity:id:${cityId}:${radiusMiles}`;
+  const cached = cache.get<NearbyCity[]>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
 
   const { data, error } = await supabase.rpc('get_nearby_cities', {
     city_id: cityId,
@@ -121,7 +140,7 @@ export async function getNearbyCitiesById(
     return [];
   }
 
-  return (data || []).map((city: any) => ({
+  const result = (data || []).map((city: any) => ({
     id: city.id,
     name: city.name,
     slug: city.slug,
@@ -143,6 +162,10 @@ export async function getNearbyCitiesById(
     score_lifestyle: 0,
     created_at: '',
   }));
+
+  cache.set(cacheKey, result, 600000);
+
+  return result;
 }
 
 export async function getNearbyCitiesWithDetails(
