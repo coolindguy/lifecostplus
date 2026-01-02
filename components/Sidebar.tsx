@@ -211,6 +211,66 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     );
   };
 
+  const renderProximityControls = () => (
+    <div className="px-4 py-3 border-l-2 border-gray-200 ml-2 mt-1 mb-1">
+      <div className="flex items-center gap-2 mb-3">
+        <Radius className="w-4 h-4 text-blue-600" />
+        <h3 className="text-sm font-semibold text-gray-900">{t('common.proximity')}</h3>
+      </div>
+
+      <div className="space-y-3">
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-2">
+            {t('common.radius')}
+          </label>
+          <div className="flex gap-2">
+            {[10, 25, 50].map((r) => (
+              <button
+                key={r}
+                onClick={() => handleRadiusChange(r)}
+                className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                  radius === r
+                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-2">
+            {t('common.units')}
+          </label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleUnitChange('miles')}
+              className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                unit === 'miles'
+                  ? 'border-blue-600 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {t('common.miles')}
+            </button>
+            <button
+              onClick={() => handleUnitChange('kilometers')}
+              className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                unit === 'kilometers'
+                  ? 'border-blue-600 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {t('common.kilometers')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div
@@ -225,66 +285,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-b from-blue-50 to-white">
-          <div className="flex items-center gap-2 mb-3">
-            <Radius className="w-5 h-5 text-blue-600" />
-            <h3 className="font-semibold text-gray-900">{t('common.proximity')}</h3>
-          </div>
-
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-2">
-                {t('common.radius')}
-              </label>
-              <div className="flex gap-2">
-                {[10, 25, 50].map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => handleRadiusChange(r)}
-                    className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all ${
-                      radius === r
-                        ? 'border-blue-600 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-2">
-                {t('common.units')}
-              </label>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleUnitChange('miles')}
-                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all ${
-                    unit === 'miles'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  {t('common.miles')}
-                </button>
-                <button
-                  onClick={() => handleUnitChange('kilometers')}
-                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all ${
-                    unit === 'kilometers'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  {t('common.kilometers')}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="p-4 space-y-1">
-          {navigationItems.map((item) => renderItem(item))}
+          {navigationItems.map((item, index) => (
+            <div key={item.label}>
+              {renderItem(item)}
+              {item.label === t('common.locations') && renderProximityControls()}
+            </div>
+          ))}
         </div>
       </div>
     </>
