@@ -306,7 +306,13 @@ export async function getNearbyCities(
   const slugs = data.map((city: any) => city.slug);
   const { data: citiesData, error: citiesError } = await supabase
     .from('cities')
-    .select('*')
+    .select(`
+      *,
+      states (
+        name,
+        slug
+      )
+    `)
     .in('slug', slugs);
 
   if (citiesError) {
@@ -315,17 +321,43 @@ export async function getNearbyCities(
   }
 
   const detailsMap = new Map(
-    (citiesData || []).map((city) => [city.slug, city])
+    (citiesData || []).map((city: any) => [city.slug, city])
   );
 
   return data.map((nearbyCity: any) => {
-    const details = detailsMap.get(nearbyCity.slug);
+    const details: any = detailsMap.get(nearbyCity.slug);
     return {
-      ...details,
+      id: details?.id,
+      name: details?.name,
+      slug: details?.slug,
+      state: details?.states?.name || '',
       latitude: nearbyCity.latitude,
       longitude: nearbyCity.longitude,
+      median_income: details?.median_income,
+      avg_rent: details?.avg_rent,
+      monthly_cost: details?.monthly_cost,
+      commute_time: details?.commute_time,
+      score_overall: details?.score_overall,
+      score_affordability: details?.score_affordability,
+      score_jobs: details?.score_jobs,
+      score_commute: details?.score_commute,
+      score_safety: details?.score_safety,
+      score_lifestyle: details?.score_lifestyle,
+      monthlyCost: details?.monthly_cost,
+      avgRent: details?.avg_rent,
+      commuteTime: details?.commute_time,
+      medianIncome: details?.median_income,
+      scores: {
+        overall: details?.score_overall,
+        affordability: details?.score_affordability,
+        jobs: details?.score_jobs,
+        commute: details?.score_commute,
+        safety: details?.score_safety,
+        lifestyle: details?.score_lifestyle,
+      },
       distance_miles: nearbyCity.distance_miles,
       distance_km: nearbyCity.distance_miles * 1.60934,
+      created_at: details?.created_at,
     } as NearbyCity;
   });
 }

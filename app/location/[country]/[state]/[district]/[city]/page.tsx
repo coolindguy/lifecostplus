@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Home, Car, Utensils, Zap } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { ArrowLeft, Home, Car, Utensils, Zap, MapPin } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumb';
 import ScoreBar from '@/components/ScoreBar';
-import { getCountryBySlug, getStateBySlug, getDistrictBySlug, getCityBySlug as getDbCityBySlug } from '@/lib/locations';
+import CityCard from '@/components/CityCard';
+import { getCountryBySlug, getStateBySlug, getDistrictBySlug, getCityBySlug as getDbCityBySlug, getNearbyCities, type NearbyCity } from '@/lib/locations';
 import { getCityBySlug } from '@/lib/cities';
 
 export default function CityPage({
@@ -13,11 +15,17 @@ export default function CityPage({
 }: {
   params: { country: string; state: string; district: string; city: string };
 }) {
+  const searchParams = useSearchParams();
   const [city, setCity] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [countryName, setCountryName] = useState('');
   const [stateName, setStateName] = useState('');
   const [districtName, setDistrictName] = useState('');
+  const [nearbyCities, setNearbyCities] = useState<NearbyCity[]>([]);
+  const [loadingNearby, setLoadingNearby] = useState(false);
+
+  const radius = parseInt(searchParams.get('radius') || '25');
+  const unit = (searchParams.get('unit') || 'miles') as 'miles' | 'kilometers';
 
   useEffect(() => {
     async function loadData() {
@@ -38,6 +46,25 @@ export default function CityPage({
     }
     loadData();
   }, [params.country, params.state, params.district, params.city]);
+
+  useEffect(() => {
+    async function loadNearbyCities() {
+      if (!params.city) return;
+
+      setLoadingNearby(true);
+      try {
+        const radiusInMiles = unit === 'kilometers' ? radius * 0.621371 : radius;
+        const nearby = await getNearbyCities(params.city, radiusInMiles);
+        setNearbyCities(nearby);
+      } catch (error) {
+        console.error('Error loading nearby cities:', error);
+        setNearbyCities([]);
+      } finally {
+        setLoadingNearby(false);
+      }
+    }
+    loadNearbyCities();
+  }, [params.city, radius, unit]);
 
   const breadcrumbs = [
     {
@@ -225,6 +252,38 @@ export default function CityPage({
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Why This City Works</h2>
           <p className="text-lg text-gray-700 leading-relaxed">{insight}</p>
         </div>
+
+        {nearbyCities.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div className="flex items-center gap-2 mb-6">
+              <MapPin className="w-6 h-6 text-blue-600" />
+              <h2 className="text-2xl font-bold text-gray-900">
+                Nearby Cities ({nearbyCities.length})
+              </h2>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Within {radius} {unit} of {city.name}
+            </p>
+            {loadingNearby ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-64 bg-gray-200 rounded-lg animate-pulse"></div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {nearbyCities.map((nearbyCity) => (
+                  <div key={nearbyCity.id}>
+                    <CityCard city={nearbyCity as any} />
+                    <p className="text-sm text-gray-600 mt-2 text-center">
+                      {nearbyCity.distance_miles?.toFixed(1)} mi / {nearbyCity.distance_km?.toFixed(1)} km
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in a Comparison?</h2>
