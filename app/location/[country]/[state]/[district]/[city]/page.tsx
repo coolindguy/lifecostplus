@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { ArrowLeft, Home, Car, Utensils, Zap, MapPin } from 'lucide-react';
+import { ArrowLeft, Chrome as Home, Car, Utensils, Zap, MapPin } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumb';
 import ScoreBar from '@/components/ScoreBar';
 import CityCard from '@/components/CityCard';
